@@ -1,0 +1,55 @@
+# config/packages/security.yaml
+security:
+    enable_authenticator_manager: true
+    # ...
+    password_hashers:
+        # auto hasher with default options for the User class (and children)
+        App\Entity\User: 'auto'
+    providers:
+        users:
+            entity:
+                # the class of the entity that represents users
+                class: 'App\Entity\User'
+                # the property to query by - e.g. email, username, etc
+                property: 'email'
+    firewalls:
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            custom_authenticator: App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+        
+        api:
+            pattern:   ^/api
+            stateless: true
+            jwt: ~
+        
+        main:
+            lazy: true
+            provider: users
+            custom_authenticator: App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+            #form_login: 
+            #    login_path: app_login
+            #    check_path: app_login
+            #json_login:
+                # api_login is a route we will create below
+            #    check_path: api_login
+
+            #guard: 
+                #authenticators:
+                #    App/Security/BackendAuthentificator
+    access_control:
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api,   roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/login, roles: PUBLIC_ACCESS  } 
+        - { path: ^/admin, roles: IS_AUTHENTICATED_FULLY  } 
+   

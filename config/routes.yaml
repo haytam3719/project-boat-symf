@@ -1,0 +1,16 @@
+api_login_check:
+    path: /api/login
+
+admin:
+    path: /admin
+    # the controller value has the format 'controller_class::method_name'
+    controller: 'App\Controller\Admin\DashboardController::index'
+
+app_login:
+    path: /login
+    controller: 'App\Controller\SecurityController::login'
+
+app_logout:
+    path: /logout
+    controller: 'App\Controller\SecurityController::logout'
+
